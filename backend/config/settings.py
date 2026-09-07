@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'django_filters',
 
     # ESHAG Project Apps
-    'accounts',
+    'accounts.apps.AccountsConfig',
     'core',
     'cms',
     'services',
@@ -94,7 +94,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database Configuration
-# Uses DATABASE_URL if available; falls back to local SQLite if unset
 DATABASES = {
     'default': dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
@@ -111,6 +110,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
+# Custom User Model
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -124,7 +126,7 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
-# Media files (User uploads, blueprint attachments, project photos)
+# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
