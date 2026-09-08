@@ -1,13 +1,10 @@
-"""
-URL configuration for ESHAG Building & Construction backend.
-"""
-
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.http import JsonResponse
 from django.db import connection
+
 
 def health_check(request):
     db_status = "healthy"
@@ -27,9 +24,12 @@ def health_check(request):
         }
     })
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/health/', health_check, name='health_check'),
+    path('api/v1/auth/', include('accounts.urls')),
+    path('api/v1/dashboard/', include('analytics.urls')),
 ]
 
 if settings.DEBUG:

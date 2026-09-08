@@ -12,7 +12,7 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_DIR = BASE_DIR.parent
 
-# Load .env file from the root directory, fallback to backend/
+# Load .env file from root directory, fallback to backend/
 load_dotenv(ROOT_DIR / '.env')
 load_dotenv(BASE_DIR / '.env')
 
@@ -93,6 +93,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+# Custom User Model definition
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
 # Database Configuration
 DATABASES = {
     'default': dj_database_url.config(
@@ -109,9 +112,6 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
-
-# Custom User Model
-AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
@@ -151,8 +151,11 @@ CSRF_TRUSTED_ORIGINS = [
     if origin.strip()
 ]
 
-# REST Framework Global Defaults
+# Django REST Framework Global Settings
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
@@ -163,4 +166,12 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 12,
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'THROTTLE_RATES': {
+        'anon': '100/hour',
+        'user': '1000/hour'
+    }
 }
