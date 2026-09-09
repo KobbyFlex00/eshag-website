@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CompanySettings, SiteStatistic, AuditLog
+from .models import CompanySettings, SiteStatistic, AuditLog, FAQ, TeamMember
 
 
 @admin.register(CompanySettings)
@@ -26,3 +26,19 @@ class AuditLogAdmin(admin.ModelAdmin):
     list_filter = ('action', 'model_name', 'created_at')
     search_fields = ('description', 'user__username', 'object_id')
     readonly_fields = ('user', 'action', 'model_name', 'object_id', 'description', 'ip_address', 'created_at')
+
+
+@admin.register(FAQ)
+class FAQAdmin(admin.ModelAdmin):
+    list_display = ('question', 'category', 'display_order', 'is_active')
+    list_editable = ('display_order', 'is_active')
+    list_filter = ('category', 'is_active')
+    search_fields = ('question', 'answer')
+
+
+@admin.register(TeamMember)
+class TeamMemberAdmin(admin.ModelAdmin):
+    list_display = ('name', 'role', 'display_order', 'is_active')
+    list_editable = ('display_order', 'is_active')
+    list_filter = ('is_active',)
+    search_fields = ('name', 'role', 'bio')

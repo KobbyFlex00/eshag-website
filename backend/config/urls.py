@@ -28,8 +28,16 @@ def health_check(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/health/', health_check, name='health_check'),
-    path('api/v1/auth/', include('accounts.urls')),
-    path('api/v1/dashboard/', include('analytics.urls')),
+    path('api/v1/auth/', include('apps.accounts.urls')),
+    path('api/v1/core/', include('apps.core.urls')),
+    path('api/v1/dashboard/', include('apps.analytics.urls')),
+    path('api/v1/services/', include('apps.services.urls')),
+    path('api/v1/cms/', include('apps.cms.urls')),
+    path('api/v1/media/', include('apps.media_library.urls')),
+    path('api/v1/projects/', include('apps.projects.urls')),
+    path('api/v1/leads/', include('apps.leads.urls')),
+    path('api/v1/blog/', include('apps.blog.urls')),
+    path('api/v1/testimonials/', include('apps.testimonials.urls')),
 ]
 
 if settings.DEBUG:

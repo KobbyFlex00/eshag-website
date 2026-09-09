@@ -2,36 +2,49 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from apps.core.permissions import IsStaffOrAdminUser
-from apps.core.models import SiteStatistic, AuditLog
-from accounts.models import CustomUser
+from apps.core.models import SiteStatistic, AuditLog, FAQ, TeamMember
+from apps.accounts.models import CustomUser
+from apps.projects.models import Project
+from apps.leads.models import Lead, ContactMessage, QuoteRequest
+from apps.blog.models import BlogPost
+from apps.testimonials.models import Testimonial
 
 
 class DashboardOverviewMetricsView(APIView):
     """
-    Returns high-level business intelligence metrics for the custom admin dashboard.
-    Strictly restricted to authorized administrative and management roles.
+    Returns aggregated live counts for the custom administrative dashboard.
     """
     permission_classes = [IsStaffOrAdminUser]
 
     def get(self, request):
-        # Dynamically query active counts, with safe fallbacks if models are populated in upcoming phases
+        total_projects = Project.objects.count()
+        active_projects = Project.objects.filter(project_status=Project.ProjectStatus.ONGOING).count()
+        completed_projects = Project.objects.filter(project_status=Project.ProjectStatus.COMPLETED).count()
+
+        total_leads = Lead.objects.count()
+        new_leads = Lead.objects.filter(status=Lead.Status.NEW).count()
+        open_leads = Lead.objects.exclude(status__in=[Lead.Status.WON, Lead.Status.LOST, Lead.Status.ARCHIVED]).count()
+
+        quote_requests_count = QuoteRequest.objects.count()
+        contact_messages_count = ContactMessage.objects.count()
         total_users = CustomUser.objects.count()
         recent_audit_count = AuditLog.objects.count()
 
-        # Placeholders wired for upcoming phase models (CMS, Projects, Leads, Careers, Testimonials)
-        # These reflect real database statistics as each module is built
+        blog_posts_count = BlogPost.objects.filter(status=BlogPost.Status.PUBLISHED).count()
+        pending_testimonials_count = Testimonial.objects.filter(is_approved=False).count()
+
         data = {
             "summary_cards": {
-                "total_projects": 0,
-                "active_projects": 0,
-                "completed_projects": 0,
-                "new_leads": 0,
-                "open_leads": 0,
-                "quote_requests": 0,
-                "blog_posts": 0,
-                "pending_testimonials": 0,
-                "job_applications": 0,
-                "contact_messages": 0,
+                "total_projects": total_projects,
+                "active_projects": active_projects,
+                "completed_projects": completed_projects,
+                "total_leads": total_leads,
+                "new_leads": new_leads,
+                "open_leads": open_leads,
+                "quote_requests": quote_requests_count,
+                "contact_messages": contact_messages_count,
+                "blog_posts": blog_posts_count,
+                "pending_testimonials": pending_testimonials_count,
                 "system_users": total_users,
                 "audit_logs_recorded": recent_audit_count,
             },

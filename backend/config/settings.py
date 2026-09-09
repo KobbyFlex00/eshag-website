@@ -16,9 +16,6 @@ ROOT_DIR = BASE_DIR.parent
 load_dotenv(ROOT_DIR / '.env')
 load_dotenv(BASE_DIR / '.env')
 
-# Add apps/ directory to sys.path so apps can be imported cleanly
-sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
-
 SECRET_KEY = os.environ.get(
     'SECRET_KEY',
     'django-insecure-fallback-dev-key-phase-2'
@@ -46,20 +43,20 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
 
-    # ESHAG Project Apps
-    'accounts.apps.AccountsConfig',
-    'core',
-    'cms',
-    'services',
-    'projects',
-    'leads',
-    'blog',
-    'media_library',
-    'testimonials',
-    'careers',
-    'notifications',
-    'analytics',
-    'ai_assistant',
+    # ESHAG Project Apps (Uniformly prefixed)
+    'apps.accounts.apps.AccountsConfig',
+    'apps.core',
+    'apps.cms',
+    'apps.services',
+    'apps.projects',
+    'apps.leads',
+    'apps.blog',
+    'apps.media_library',
+    'apps.testimonials',
+    'apps.careers',
+    'apps.notifications',
+    'apps.analytics',
+    'apps.ai_assistant',
 ]
 
 MIDDLEWARE = [
@@ -93,10 +90,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Custom User Model definition
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
-# Database Configuration
 DATABASES = {
     'default': dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
@@ -105,7 +100,6 @@ DATABASES = {
     )
 }
 
-# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -113,26 +107,22 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
-# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CORS and CSRF configurations
 CORS_ALLOWED_ORIGINS = [
     origin.strip()
     for origin in os.environ.get(
@@ -151,7 +141,6 @@ CSRF_TRUSTED_ORIGINS = [
     if origin.strip()
 ]
 
-# Django REST Framework Global Settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',

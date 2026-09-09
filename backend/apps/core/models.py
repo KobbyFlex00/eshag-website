@@ -70,6 +70,7 @@ class CompanySettings(TimeStampedModel):
     )
 
     class Meta:
+        app_label = 'core'
         verbose_name = "Company Settings"
         verbose_name_plural = "Company Settings"
 
@@ -90,6 +91,7 @@ class SiteStatistic(TimeStampedModel):
     is_active = models.BooleanField(default=True)
 
     class Meta:
+        app_label = 'core'
         ordering = ['display_order', 'created_at']
 
     def __str__(self):
@@ -105,8 +107,54 @@ class AuditLog(TimeStampedModel):
     ip_address = models.GenericIPAddressField(null=True, blank=True)
 
     class Meta:
+        app_label = 'core'
         ordering = ['-created_at']
 
     def __str__(self):
         username = self.user.username if self.user else "System"
         return f"[{self.created_at}] {username}: {self.action}"
+
+
+class FAQ(TimeStampedModel):
+    """
+    Frequently Asked Questions displayed on the homepage, quote, and FAQ pages.
+    """
+    class Category(models.TextChoices):
+        GENERAL = 'general', 'General'
+        PRICING = 'pricing', 'Pricing & Quotes'
+        PROCESS = 'process', 'Construction Process'
+        MATERIALS = 'materials', 'Materials & Quality'
+        TIMELINES = 'timelines', 'Project Timelines'
+
+    question = models.CharField(max_length=300)
+    answer = models.TextField()
+    category = models.CharField(max_length=50, choices=Category.choices, default=Category.GENERAL, db_index=True)
+    display_order = models.PositiveIntegerField(default=0, db_index=True)
+    is_active = models.BooleanField(default=True, db_index=True)
+
+    class Meta:
+        app_label = 'core'
+        ordering = ['display_order', 'created_at']
+
+    def __str__(self):
+        return self.question
+
+
+class TeamMember(TimeStampedModel):
+    """
+    Key personnel, site engineers, project managers, and leadership.
+    """
+    name = models.CharField(max_length=200)
+    role = models.CharField(max_length=150)
+    bio = models.TextField(blank=True)
+    photo = models.ImageField(upload_to='team/', blank=True, null=True)
+    linkedin_url = models.URLField(blank=True)
+    display_order = models.PositiveIntegerField(default=0, db_index=True)
+    is_active = models.BooleanField(default=True, db_index=True)
+
+    class Meta:
+        app_label = 'core'
+        ordering = ['display_order', 'name']
+
+    def __str__(self):
+        return f"{self.name} — {self.role}"

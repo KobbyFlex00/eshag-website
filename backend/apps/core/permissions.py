@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from accounts.models import CustomUser
+from apps.accounts.models import CustomUser
 
 
 class IsStaffOrAdminUser(permissions.BasePermission):
