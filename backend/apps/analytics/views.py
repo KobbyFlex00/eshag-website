@@ -8,6 +8,7 @@ from apps.projects.models import Project
 from apps.leads.models import Lead, ContactMessage, QuoteRequest
 from apps.blog.models import BlogPost
 from apps.testimonials.models import Testimonial
+from apps.careers.models import JobApplication, JobPosting
 
 
 class DashboardOverviewMetricsView(APIView):
@@ -32,6 +33,7 @@ class DashboardOverviewMetricsView(APIView):
 
         blog_posts_count = BlogPost.objects.filter(status=BlogPost.Status.PUBLISHED).count()
         pending_testimonials_count = Testimonial.objects.filter(is_approved=False).count()
+        job_applications_count = JobApplication.objects.count()
 
         data = {
             "summary_cards": {
@@ -45,6 +47,7 @@ class DashboardOverviewMetricsView(APIView):
                 "contact_messages": contact_messages_count,
                 "blog_posts": blog_posts_count,
                 "pending_testimonials": pending_testimonials_count,
+                "job_applications": job_applications_count,
                 "system_users": total_users,
                 "audit_logs_recorded": recent_audit_count,
             },
