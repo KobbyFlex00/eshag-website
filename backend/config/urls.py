@@ -40,6 +40,7 @@ urlpatterns = [
     path('api/v1/testimonials/', include('apps.testimonials.urls')),
     path('api/v1/careers/', include('apps.careers.urls')),
     path('api/v1/notifications/', include('apps.notifications.urls')),
+    path('api/v1/assistant/', include('apps.ai_assistant.urls')),
 ]
 
 if settings.DEBUG:
