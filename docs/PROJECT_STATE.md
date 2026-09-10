@@ -1,9 +1,9 @@
 # ESHAG BUILDING & CONSTRUCTION — PROJECT STATE
 
 ## Current Status
-- **Current Phase:** Phase 6 — Custom Admin Dashboard Foundation & Metrics Endpoints
-- **Last Successful Checkpoint:** Checkpoint 6 (Dashboard Metrics API Active & RBAC Protected)
-- **Overall Status:** Administrative metrics foundation operational.
+- **Current Phase:** Phase 12 — Notifications, In-App Alerts & Email Dispatch Engine
+- **Last Successful Checkpoint:** Checkpoint 12 (Signals & In-App Notification System Live)
+- **Overall Status:** Real-time event notifications and email logging operational on PostgreSQL.
 
 ## Architecture & Configuration
 - **Operating System:** Windows 10/11
@@ -12,15 +12,20 @@
 - **Active Endpoints:**
   - `GET /api/health/`
   - `POST /api/v1/auth/login/`
-  - `POST /api/v1/auth/logout/`
-  - `GET /api/v1/auth/me/`
-  - `GET /api/v1/dashboard/metrics/` (Protected by `IsStaffOrAdminUser`)
-
-## Completed Milestones
-- [x] Phase 1-5: Setup, PostgreSQL, Core Models, RBAC Auth, and DRF Configuration
-- [x] Phase 6: Permission class `IsStaffOrAdminUser` created
-- [x] Phase 6: Endpoint `DashboardOverviewMetricsView` active and verified
-- [x] Phase 6: Unauthenticated access blocked; session authentication validated
+  - `GET /api/v1/dashboard/metrics/`
+  - `GET /api/v1/core/settings/`
+  - `GET /api/v1/core/faqs/`
+  - `GET /api/v1/services/`
+  - `GET /api/v1/cms/pages/<slug>/`
+  - `GET, POST /api/v1/media/`
+  - `GET /api/v1/projects/`
+  - `POST /api/v1/leads/contact/` (Triggers notification signal)
+  - `POST /api/v1/leads/quote/` (Triggers notification signal)
+  - `GET /api/v1/careers/jobs/`
+  - `POST /api/v1/careers/apply/` (Triggers notification signal)
+  - `GET /api/v1/notifications/` (Authenticated alert feed)
+  - `PATCH /api/v1/notifications/<id>/read/`
+  - `POST /api/v1/notifications/mark-all-read/`
 
 ## Next Recommended Step
-- Proceed to **Phase 7: CMS Engine (Pages, Homepage Sections, Services & Media Library)**.
+- Proceed to **Phase 13: Construction Cost Estimator & AI Assistant Module**.
