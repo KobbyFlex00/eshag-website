@@ -10,9 +10,13 @@ class ProjectImageSerializer(serializers.ModelSerializer):
         fields = ['id', 'image', 'image_url', 'caption', 'display_order']
 
     def get_image_url(self, obj):
-        if obj.image:
-            return obj.image.url
-        return None
+        if not obj.image:
+            return None
+        request = self.context.get('request')
+        url = obj.image.url
+        if request is not None and not url.startswith(('http://', 'https://')):
+            return request.build_absolute_uri(url)
+        return url
 
 
 class ProjectUpdateSerializer(serializers.ModelSerializer):
@@ -35,9 +39,13 @@ class ProjectListSerializer(serializers.ModelSerializer):
         ]
 
     def get_featured_image_url(self, obj):
-        if obj.featured_image:
-            return obj.featured_image.url
-        return None
+        if not obj.featured_image:
+            return None
+        request = self.context.get('request')
+        url = obj.featured_image.url
+        if request is not None and not url.startswith(('http://', 'https://')):
+            return request.build_absolute_uri(url)
+        return url
 
 
 class ProjectDetailSerializer(serializers.ModelSerializer):
@@ -55,9 +63,13 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
         ]
 
     def get_featured_image_url(self, obj):
-        if obj.featured_image:
-            return obj.featured_image.url
-        return None
+        if not obj.featured_image:
+            return None
+        request = self.context.get('request')
+        url = obj.featured_image.url
+        if request is not None and not url.startswith(('http://', 'https://')):
+            return request.build_absolute_uri(url)
+        return url
 
 
 ProjectSerializer = ProjectDetailSerializer
