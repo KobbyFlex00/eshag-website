@@ -1,5 +1,6 @@
 """
 Django settings for ESHAG Building and Construction.
+Production-ready configuration supporting local dev and production hosting.
 """
 
 from pathlib import Path
@@ -12,13 +13,13 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_DIR = BASE_DIR.parent
 
-# Load .env file from root directory, fallback to backend/
+# Load environment files
 load_dotenv(ROOT_DIR / '.env')
 load_dotenv(BASE_DIR / '.env')
 
 SECRET_KEY = os.environ.get(
     'SECRET_KEY',
-    'django-insecure-fallback-dev-key-phase-2'
+    'django-insecure-fallback-dev-key-phase-14-hardened'
 )
 
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
@@ -36,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
 
     # Third Party
@@ -43,25 +45,26 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
 
-    # ESHAG Project Apps (Uniformly prefixed)
+    # ESHAG Modules
     'apps.accounts.apps.AccountsConfig',
-    'apps.core',
-    'apps.cms',
-    'apps.services',
-    'apps.projects',
-    'apps.leads',
-    'apps.blog',
-    'apps.media_library',
-    'apps.testimonials',
-    'apps.careers',
-    'apps.notifications',
-    'apps.analytics',
-    'apps.ai_assistant',
+    'apps.core.apps.CoreConfig',
+    'apps.cms.apps.CmsConfig',
+    'apps.services.apps.ServicesConfig',
+    'apps.projects.apps.ProjectsConfig',
+    'apps.leads.apps.LeadsConfig',
+    'apps.blog.apps.BlogConfig',
+    'apps.media_library.apps.MediaLibraryConfig',
+    'apps.testimonials.apps.TestimonialsConfig',
+    'apps.careers.apps.CareersConfig',
+    'apps.notifications.apps.NotificationsConfig',
+    'apps.analytics.apps.AnalyticsConfig',
+    'apps.ai_assistant.apps.AiAssistantConfig',
 ]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -92,6 +95,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
+# PostgreSQL / Environment-driven Database
 DATABASES = {
     'default': dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
@@ -112,17 +116,21 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
+# Static Files Configuration
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# Media Files Configuration
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# CORS & CSRF
 CORS_ALLOWED_ORIGINS = [
     origin.strip()
     for origin in os.environ.get(
@@ -131,6 +139,7 @@ CORS_ALLOWED_ORIGINS = [
     ).split(',')
     if origin.strip()
 ]
+CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
@@ -141,6 +150,7 @@ CSRF_TRUSTED_ORIGINS = [
     if origin.strip()
 ]
 
+# REST Framework Global Architecture
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
@@ -162,5 +172,18 @@ REST_FRAMEWORK = {
     'THROTTLE_RATES': {
         'anon': '100/hour',
         'user': '1000/hour'
-    }
+    },
+    'EXCEPTION_HANDLER': 'apps.core.exceptions.custom_api_exception_handler'
 }
+
+# Production Security Headers
+if not DEBUG:
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'True') == 'True'
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
