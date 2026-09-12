@@ -55,8 +55,23 @@ export default function HomePage() {
   return (
     <div className="space-y-20 pb-20">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-slate-900 via-slate-850 to-slate-950 text-white py-24 lg:py-32 overflow-hidden border-b border-slate-800">
-        <div className="absolute inset-0 bg-[radial-gradient(#d97706_1px,transparent_1px)] [background-size:24px_24px] opacity-15"></div>
+      <section className="relative bg-slate-950 text-white py-24 lg:py-32 overflow-hidden border-b border-slate-800">
+        {/* Dynamic Cloudinary Hero Image Background */}
+        {pageData?.hero_image && (
+          <div className="absolute inset-0 z-0">
+            <img 
+              src={pageData.hero_image} 
+              alt={pageData.hero_headline || "ESHAG Construction Hero"} 
+              className="w-full h-full object-cover object-center"
+            />
+            {/* Gradient overlay for readability */}
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/80 to-slate-900/60 backdrop-blur-[1px]" />
+          </div>
+        )}
+
+        {/* Fallback Dot Grid Pattern */}
+        <div className="absolute inset-0 bg-[radial-gradient(#d97706_1px,transparent_1px)] [background-size:24px_24px] opacity-15 pointer-events-none z-0"></div>
+
         <div className="container-custom relative z-10">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-400/30 text-amber-300 text-xs font-semibold uppercase tracking-wider mb-6">
@@ -64,11 +79,11 @@ export default function HomePage() {
               Ghana's Premier Civil & Building Contractors
             </div>
             
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-white">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-white drop-shadow-md">
               {pageData?.hero_headline || "Building Dreams. Constructing Futures."}
             </h1>
             
-            <p className="text-lg sm:text-xl text-slate-300 mb-8 leading-relaxed">
+            <p className="text-lg sm:text-xl text-slate-200 mb-8 leading-relaxed drop-shadow-sm">
               {pageData?.hero_subheadline || "Delivering excellence in residential developments, commercial facilities, and professional civil project management across Greater Accra and beyond."}
             </p>
 
@@ -82,7 +97,7 @@ export default function HomePage() {
               </Link>
               <Link
                 to="/estimator"
-                className="inline-flex items-center gap-2 bg-slate-800/90 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold px-6 py-3.5 rounded-xl transition"
+                className="inline-flex items-center gap-2 bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold px-6 py-3.5 rounded-xl backdrop-blur-sm transition"
               >
                 Cost Calculator
               </Link>
