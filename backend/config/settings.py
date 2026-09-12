@@ -95,7 +95,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Django 5 explicit storage backends
 STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage"
@@ -107,10 +106,9 @@ STORAGES = {
     },
 }
 
-# Legacy setting and flags to prevent Whitenoise background thread compression
-STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
 WHITENOISE_MANIFEST_STRICT = False
 WHITENOISE_USE_FINDERS = True
+
 
 # Media files setup
 MEDIA_URL = '/media/'
