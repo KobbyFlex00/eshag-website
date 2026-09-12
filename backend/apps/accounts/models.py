@@ -11,7 +11,6 @@ class CustomUser(AbstractUser):
         CLIENT = 'CLIENT', 'Client'
         PROJECT_MANAGER = 'PROJECT_MANAGER', 'Project Manager'
 
-    # This line prevents PostgreSQL from trying to convert uuid to bigint:
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
