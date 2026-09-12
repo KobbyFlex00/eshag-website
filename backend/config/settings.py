@@ -51,6 +51,9 @@ INSTALLED_APPS = [
     'apps.ai_assistant',
 ]
 
+# Custom User Model definition
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
