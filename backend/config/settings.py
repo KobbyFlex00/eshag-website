@@ -15,7 +15,6 @@ ALLOWED_HOSTS = [
 ]
 
 INSTALLED_APPS = [
-    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -71,7 +70,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Database configuration: prefers DATABASE_URL (PostgreSQL), falls back to SQLite
 DATABASES = {
     'default': dj_database_url.config(
         default=os.getenv('DATABASE_URL', f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
@@ -97,8 +95,21 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Use non-manifest storage so missing icons/SVGs in CSS don't crash collectstatic
+# Django 5 explicit storage backends
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage"
+        if os.getenv("CLOUDINARY_CLOUD_NAME")
+        else "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.StaticFilesStorage",
+    },
+}
+
+# Legacy setting and flags to prevent Whitenoise background thread compression
 STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
+WHITENOISE_MANIFEST_STRICT = False
 WHITENOISE_USE_FINDERS = True
 
 # Media files setup
@@ -112,14 +123,9 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': os.getenv('CLOUDINARY_API_SECRET', ''),
 }
 
-if os.getenv('CLOUDINARY_CLOUD_NAME'):
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-else:
-    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CORS & CSRF configurations with environment variable fallbacks
+# CORS & CSRF configurations
 cors_env = os.getenv('CORS_ALLOWED_ORIGINS', '')
 if cors_env:
     CORS_ALLOWED_ORIGINS = [orig.strip() for orig in cors_env.split(',') if orig.strip()]
