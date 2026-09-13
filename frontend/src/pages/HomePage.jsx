@@ -11,7 +11,6 @@ import TestimonialsSection from '../components/TestimonialsSection';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://eshag-website.onrender.com/api/v1';
 
-// Helper to unpack both DRF paginated objects and direct raw arrays
 const unpackResponse = (res) => {
   const data = res?.data;
   if (Array.isArray(data)) return data;
@@ -20,7 +19,6 @@ const unpackResponse = (res) => {
   return [];
 };
 
-// Helper to normalize Cloudinary / Django media URLs
 const resolveImageUrl = (img) => {
   if (!img) return '';
   if (typeof img !== 'string') return img?.url || '';
@@ -72,13 +70,12 @@ export default function HomePage() {
     fetchHomeData();
   }, []);
 
-  // Format the headline with gradient styling for multi-sentence or dotted headings
   const renderHeadline = (headline) => {
     if (!headline) {
       return (
         <>
           Building Dreams Across Ghana.{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500">
             Constructing Futures.
           </span>
         </>
@@ -90,7 +87,7 @@ export default function HomePage() {
       return (
         <>
           {parts[0]}.{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500">
             {parts.slice(1).join('.').trim()}
           </span>
         </>
@@ -111,23 +108,23 @@ export default function HomePage() {
   const heroCtaUrl = pageData?.hero_cta_url || '/contact';
 
   return (
-    <div className="min-h-screen bg-[#070C18] text-white">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#070C18] text-slate-900 dark:text-white transition-colors duration-200">
       {/* 1. HERO SECTION */}
-      <section className="relative min-h-[90vh] flex items-center justify-center pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section className="relative min-h-[90vh] flex items-center justify-center pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden bg-slate-950">
         {/* Dynamic Hero Background Image */}
         <div className="absolute inset-0 z-0">
           <img
             key={heroImageSrc}
             src={heroImageSrc}
             alt="ESHAG Architectural Project"
-            className="w-full h-full object-cover object-center filter brightness-[0.28] transition-opacity duration-700"
+            className="w-full h-full object-cover object-center filter brightness-[0.3] transition-opacity duration-700"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#070C18]/80 via-transparent to-[#070C18]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/40 to-slate-950/90 dark:from-[#070C18]/90 dark:via-transparent dark:to-[#070C18]" />
         </div>
 
         <div className="relative z-10 max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-semibold uppercase tracking-widest mb-6">
-            <HardHat className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-semibold uppercase tracking-widest mb-6 backdrop-blur-md">
+            <HardHat className="w-3.5 h-3.5 text-orange-500" />
             GHANA&apos;S PREMIER CIVIL &amp; BUILDING CONTRACTORS
           </div>
 
@@ -135,21 +132,21 @@ export default function HomePage() {
             {renderHeadline(heroHeadline)}
           </h1>
 
-          <p className="max-w-3xl mx-auto text-base sm:text-xl text-slate-300 mb-10 leading-relaxed">
+          <p className="max-w-3xl mx-auto text-base sm:text-xl text-slate-200 mb-10 leading-relaxed font-light">
             {heroSubheadline}
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
               to={heroCtaUrl}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl shadow-lg shadow-orange-500/25 transition-all text-sm sm:text-base"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all text-sm sm:text-base"
             >
               {heroCtaText}
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               to="/cost-estimator"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-slate-900/80 hover:bg-slate-800 text-white border border-slate-700 font-bold rounded-xl backdrop-blur-sm transition-all text-sm sm:text-base"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-slate-900/90 hover:bg-slate-800 text-white border border-slate-700 font-bold rounded-xl backdrop-blur-md transition-all text-sm sm:text-base"
             >
               <Calculator className="w-4 h-4 text-orange-400" />
               Cost Calculator
@@ -159,7 +156,7 @@ export default function HomePage() {
       </section>
 
       {/* 2. STATS COUNTER BAR */}
-      <section className="py-12 bg-slate-950 border-y border-slate-800/80">
+      <section className="py-12 bg-white dark:bg-slate-950 border-y border-slate-200 dark:border-slate-800/80 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {stats.length > 0 ? (
@@ -169,7 +166,7 @@ export default function HomePage() {
                     {stat.value}
                     {stat.suffix || ''}
                   </div>
-                  <div className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-slate-400">
+                  <div className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                     {stat.label}
                   </div>
                 </div>
@@ -178,25 +175,25 @@ export default function HomePage() {
               <>
                 <div className="p-4">
                   <div className="text-3xl sm:text-5xl font-extrabold text-orange-500 mb-2">120+</div>
-                  <div className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-slate-400">
+                  <div className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                     Completed Projects
                   </div>
                 </div>
                 <div className="p-4">
                   <div className="text-3xl sm:text-5xl font-extrabold text-orange-500 mb-2">12+</div>
-                  <div className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-slate-400">
+                  <div className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                     Years Experience
                   </div>
                 </div>
                 <div className="p-4">
                   <div className="text-3xl sm:text-5xl font-extrabold text-orange-500 mb-2">99%</div>
-                  <div className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-slate-400">
+                  <div className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                     Client Satisfaction
                   </div>
                 </div>
                 <div className="p-4">
                   <div className="text-3xl sm:text-5xl font-extrabold text-orange-500 mb-2">45+</div>
-                  <div className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-slate-400">
+                  <div className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                     Site Engineers &amp; Artisans
                   </div>
                 </div>
@@ -212,10 +209,10 @@ export default function HomePage() {
           <span className="inline-block text-orange-500 font-semibold tracking-widest text-xs uppercase px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 mb-4">
             OUR EXPERTISE
           </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-4">
             Comprehensive Construction Solutions
           </h2>
-          <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
+          <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed">
             From luxury residential villas to heavy civil works, ESHAG delivers structural longevity with disciplined execution.
           </p>
         </div>
@@ -225,10 +222,10 @@ export default function HomePage() {
             {services.slice(0, 3).map((service) => (
               <div
                 key={service.id || service.slug}
-                className="group flex flex-col bg-slate-900/60 hover:bg-slate-900 border border-slate-800 hover:border-orange-500/40 rounded-2xl overflow-hidden transition-all duration-300"
+                className="group flex flex-col bg-white dark:bg-slate-900/60 hover:bg-slate-50 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-orange-500/40 rounded-2xl overflow-hidden shadow-sm dark:shadow-none transition-all duration-300"
               >
                 {service.featured_image && (
-                  <div className="h-48 overflow-hidden bg-slate-950">
+                  <div className="h-48 overflow-hidden bg-slate-100 dark:bg-slate-950">
                     <img
                       src={resolveImageUrl(service.featured_image)}
                       alt={service.name}
@@ -238,16 +235,16 @@ export default function HomePage() {
                 )}
                 <div className="p-6 flex-1 flex flex-col justify-between">
                   <div>
-                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-orange-400 transition-colors">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-orange-500 transition-colors">
                       {service.name}
                     </h3>
-                    <p className="text-sm text-slate-400 mb-6 leading-relaxed line-clamp-3">
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 leading-relaxed line-clamp-3">
                       {service.short_description || service.description}
                     </p>
                   </div>
                   <Link
                     to={`/services/${service.slug}`}
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-orange-500 hover:text-orange-400"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-orange-500 hover:text-orange-600 dark:hover:text-orange-400"
                   >
                     Learn More
                     <ArrowRight className="w-4 h-4" />
@@ -261,7 +258,7 @@ export default function HomePage() {
         <div className="text-center mt-12">
           <Link
             to="/services"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-orange-500/40 text-slate-200 hover:text-white text-sm font-semibold transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-orange-500/40 text-slate-800 dark:text-slate-200 hover:text-orange-500 dark:hover:text-white text-sm font-semibold transition-all shadow-sm"
           >
             Explore All Capabilities
             <ArrowRight className="w-4 h-4" />
@@ -271,20 +268,20 @@ export default function HomePage() {
 
       {/* 4. FEATURED PROJECTS PORTFOLIO */}
       {projects.length > 0 && (
-        <section className="py-24 bg-slate-950/60 border-t border-slate-800/80">
+        <section className="py-24 bg-slate-100/70 dark:bg-slate-950/60 border-t border-slate-200 dark:border-slate-800/80 transition-colors">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-16">
               <div>
                 <span className="inline-block text-orange-500 font-semibold tracking-widest text-xs uppercase px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 mb-4">
                   PROVEN PORTFOLIO
                 </span>
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
                   Featured Developments &amp; Sites
                 </h2>
               </div>
               <Link
                 to="/projects"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-orange-500 hover:text-orange-400 mt-4 md:mt-0"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-orange-500 hover:text-orange-600 dark:hover:text-orange-400 mt-4 md:mt-0"
               >
                 View Complete Portfolio
                 <ArrowRight className="w-4 h-4" />
@@ -295,10 +292,10 @@ export default function HomePage() {
               {projects.slice(0, 3).map((proj) => (
                 <div
                   key={proj.id || proj.slug}
-                  className="group bg-slate-900 border border-slate-800 hover:border-orange-500/40 rounded-2xl overflow-hidden transition-all"
+                  className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-orange-500/40 rounded-2xl overflow-hidden shadow-sm dark:shadow-none transition-all"
                 >
                   {proj.featured_image && (
-                    <div className="h-56 overflow-hidden bg-slate-950">
+                    <div className="h-56 overflow-hidden bg-slate-100 dark:bg-slate-950">
                       <img
                         src={resolveImageUrl(proj.featured_image)}
                         alt={proj.title}
@@ -307,14 +304,14 @@ export default function HomePage() {
                     </div>
                   )}
                   <div className="p-6">
-                    <span className="text-xs font-semibold text-orange-400 uppercase tracking-wide">
+                    <span className="text-xs font-semibold text-orange-500 uppercase tracking-wide">
                       {proj.category || 'Construction'}
                     </span>
-                    <h3 className="text-xl font-bold text-white mt-1 mb-2 group-hover:text-orange-400 transition-colors">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-1 mb-2 group-hover:text-orange-500 transition-colors">
                       {proj.title}
                     </h3>
-                    <p className="text-xs text-slate-400 mb-4">{proj.location}</p>
-                    <p className="text-sm text-slate-400 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">{proj.location}</p>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed">
                       {proj.description}
                     </p>
                   </div>
@@ -330,15 +327,15 @@ export default function HomePage() {
 
       {/* 6. FREQUENTLY ASKED QUESTIONS */}
       {faqs.length > 0 && (
-        <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-800/80">
+        <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-200 dark:border-slate-800/80 transition-colors">
           <div className="text-center mb-16">
             <span className="inline-block text-orange-500 font-semibold tracking-widest text-xs uppercase px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 mb-4">
               QUESTIONS &amp; CLARIFICATIONS
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-4">
               Frequently Asked Questions
             </h2>
-            <p className="text-slate-400 text-sm sm:text-base">
+            <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base">
               Answers to common inquiries regarding project permits, contracts, and diaspora management.
             </p>
           </div>
@@ -349,13 +346,13 @@ export default function HomePage() {
               return (
                 <div
                   key={faq.id || index}
-                  className="bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden transition-colors"
+                  className="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm dark:shadow-none transition-colors"
                 >
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : index)}
                     className="w-full p-6 text-left flex items-center justify-between gap-4"
                   >
-                    <span className="font-semibold text-white text-base sm:text-lg">
+                    <span className="font-semibold text-slate-900 dark:text-white text-base sm:text-lg">
                       {faq.question}
                     </span>
                     <ChevronDown
@@ -365,7 +362,7 @@ export default function HomePage() {
                     />
                   </button>
                   {isOpen && (
-                    <div className="px-6 pb-6 text-sm text-slate-300 leading-relaxed border-t border-slate-800/50 pt-4">
+                    <div className="px-6 pb-6 text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/50 pt-4">
                       {faq.answer}
                     </div>
                   )}
