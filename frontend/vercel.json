@@ -1,27 +1,23 @@
 {
-  "rewrites": [
+  "redirects": [
     {
       "source": "/admin",
-      "destination": "https://eshag-website.onrender.com/admin/"
+      "destination": "https://eshag-website.onrender.com/admin/",
+      "permanent": false
     },
     {
       "source": "/admin/:path*",
-      "destination": "https://eshag-website.onrender.com/admin/:path*"
-    },
-    {
-      "source": "/static/admin/:path*",
-      "destination": "https://eshag-website.onrender.com/static/admin/:path*"
-    },
-    {
-      "source": "/static/:path*",
-      "destination": "https://eshag-website.onrender.com/static/:path*"
-    },
+      "destination": "https://eshag-website.onrender.com/admin/:path*",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
     {
       "source": "/api/:path*",
       "destination": "https://eshag-website.onrender.com/api/:path*"
     },
     {
-      "source": "/((?!admin|api|static).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
