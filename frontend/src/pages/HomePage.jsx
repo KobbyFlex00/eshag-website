@@ -2,15 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import {
-  Building2,
   HardHat,
-  Ruler,
-  CheckCircle2,
   ArrowRight,
   Calculator,
-  ShieldCheck,
-  Award,
-  Users,
   ChevronDown
 } from 'lucide-react';
 import TestimonialsSection from '../components/TestimonialsSection';
@@ -26,7 +20,20 @@ const unpackResponse = (res) => {
   return [];
 };
 
+// Helper to normalize Cloudinary / Django media URLs
+const resolveImageUrl = (img) => {
+  if (!img) return '';
+  if (typeof img !== 'string') return img?.url || '';
+  if (img.startsWith('http://') || img.startsWith('https://')) return img;
+  if (img.startsWith('media/') || img.startsWith('/media/')) {
+    const cleanPath = img.startsWith('/') ? img.slice(1) : img;
+    return `https://res.cloudinary.com/dce9e8zz5/image/upload/v1/${cleanPath}`;
+  }
+  return `https://eshag-website.onrender.com${img.startsWith('/') ? '' : '/'}${img}`;
+};
+
 export default function HomePage() {
+  const [pageData, setPageData] = useState(null);
   const [stats, setStats] = useState([]);
   const [services, setServices] = useState([]);
   const [projects, setProjects] = useState([]);
@@ -40,7 +47,8 @@ export default function HomePage() {
       try {
         setLoading(true);
 
-        const [statsRes, servicesRes, projectsRes, testimonialsRes, faqsRes] = await Promise.all([
+        const [pageRes, statsRes, servicesRes, projectsRes, testimonialsRes, faqsRes] = await Promise.all([
+          axios.get(`${API_BASE_URL}/cms/pages/home/`).catch(() => ({ data: null })),
           axios.get(`${API_BASE_URL}/core/statistics/`).catch(() => ({ data: [] })),
           axios.get(`${API_BASE_URL}/services/?featured=true`).catch(() => ({ data: [] })),
           axios.get(`${API_BASE_URL}/projects/`).catch(() => ({ data: [] })),
@@ -48,6 +56,7 @@ export default function HomePage() {
           axios.get(`${API_BASE_URL}/core/faqs/`).catch(() => ({ data: [] })),
         ]);
 
+        setPageData(pageRes.data);
         setStats(unpackResponse(statsRes));
         setServices(unpackResponse(servicesRes));
         setProjects(unpackResponse(projectsRes));
@@ -63,16 +72,55 @@ export default function HomePage() {
     fetchHomeData();
   }, []);
 
+  // Format the headline with gradient styling for multi-sentence or dotted headings
+  const renderHeadline = (headline) => {
+    if (!headline) {
+      return (
+        <>
+          Building Dreams Across Ghana.{' '}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">
+            Constructing Futures.
+          </span>
+        </>
+      );
+    }
+
+    const parts = headline.split('.');
+    if (parts.length > 1 && parts[1].trim()) {
+      return (
+        <>
+          {parts[0]}.{' '}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">
+            {parts.slice(1).join('.').trim()}
+          </span>
+        </>
+      );
+    }
+    return headline;
+  };
+
+  const heroImageSrc =
+    resolveImageUrl(pageData?.hero_image) ||
+    'https://res.cloudinary.com/dce9e8zz5/image/upload/v1/media/services/WhatsApp_Image_2026-09-12_at_4.46.20_AM_ubrilr';
+
+  const heroHeadline = pageData?.hero_headline;
+  const heroSubheadline =
+    pageData?.hero_subheadline ||
+    'Delivering excellence in residential developments, commercial facilities, and professional civil project management across Greater Accra and beyond.';
+  const heroCtaText = pageData?.hero_cta_text || 'Request a Quote';
+  const heroCtaUrl = pageData?.hero_cta_url || '/contact';
+
   return (
     <div className="min-h-screen bg-[#070C18] text-white">
       {/* 1. HERO SECTION */}
       <section className="relative min-h-[90vh] flex items-center justify-center pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        {/* Hero Background Image with Gradient Overlay */}
+        {/* Dynamic Hero Background Image */}
         <div className="absolute inset-0 z-0">
           <img
-            src="https://res.cloudinary.com/dce9e8zz5/image/upload/v1/media/services/WhatsApp_Image_2026-09-12_at_4.46.20_AM_ubrilr"
+            key={heroImageSrc}
+            src={heroImageSrc}
             alt="ESHAG Architectural Project"
-            className="w-full h-full object-cover object-center filter brightness-[0.25]"
+            className="w-full h-full object-cover object-center filter brightness-[0.28] transition-opacity duration-700"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#070C18]/80 via-transparent to-[#070C18]" />
         </div>
@@ -84,22 +132,19 @@ export default function HomePage() {
           </div>
 
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight">
-            Building Dreams Across Ghana.{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">
-              Constructing Futures.
-            </span>
+            {renderHeadline(heroHeadline)}
           </h1>
 
           <p className="max-w-3xl mx-auto text-base sm:text-xl text-slate-300 mb-10 leading-relaxed">
-            Delivering excellence in residential developments, commercial facilities, and professional civil project management across Greater Accra and beyond.
+            {heroSubheadline}
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
-              to="/contact"
+              to={heroCtaUrl}
               className="inline-flex items-center gap-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl shadow-lg shadow-orange-500/25 transition-all text-sm sm:text-base"
             >
-              Request a Quote
+              {heroCtaText}
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
@@ -185,7 +230,7 @@ export default function HomePage() {
                 {service.featured_image && (
                   <div className="h-48 overflow-hidden bg-slate-950">
                     <img
-                      src={service.featured_image}
+                      src={resolveImageUrl(service.featured_image)}
                       alt={service.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
@@ -224,7 +269,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. FEATURED PROJECTS CAROUSEL / GRID */}
+      {/* 4. FEATURED PROJECTS PORTFOLIO */}
       {projects.length > 0 && (
         <section className="py-24 bg-slate-950/60 border-t border-slate-800/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -253,9 +298,9 @@ export default function HomePage() {
                   className="group bg-slate-900 border border-slate-800 hover:border-orange-500/40 rounded-2xl overflow-hidden transition-all"
                 >
                   {proj.featured_image && (
-                    <div className="h-56 overflow-hidden">
+                    <div className="h-56 overflow-hidden bg-slate-950">
                       <img
-                        src={proj.featured_image}
+                        src={resolveImageUrl(proj.featured_image)}
                         alt={proj.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
@@ -280,7 +325,7 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* 5. TESTIMONIALS SECTION (Mounted directly) */}
+      {/* 5. TESTIMONIALS SECTION */}
       <TestimonialsSection testimonials={testimonials} />
 
       {/* 6. FREQUENTLY ASKED QUESTIONS */}
