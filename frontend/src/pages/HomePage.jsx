@@ -11,6 +11,7 @@ import TestimonialsSection from '../components/TestimonialsSection';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://eshag-website.onrender.com/api/v1';
 
+// Helper to unpack both DRF paginated objects and direct raw arrays
 const unpackResponse = (res) => {
   const data = res?.data;
   if (Array.isArray(data)) return data;
@@ -19,6 +20,7 @@ const unpackResponse = (res) => {
   return [];
 };
 
+// Helper to normalize Cloudinary / Django media URLs
 const resolveImageUrl = (img) => {
   if (!img) return '';
   if (typeof img !== 'string') return img?.url || '';
@@ -75,7 +77,7 @@ export default function HomePage() {
       return (
         <>
           Building Dreams Across Ghana.{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">
             Constructing Futures.
           </span>
         </>
@@ -87,7 +89,7 @@ export default function HomePage() {
       return (
         <>
           {parts[0]}.{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">
             {parts.slice(1).join('.').trim()}
           </span>
         </>
@@ -109,44 +111,45 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#070C18] text-slate-900 dark:text-white transition-colors duration-200">
-      {/* 1. HERO SECTION */}
-      <section className="relative min-h-[90vh] flex items-center justify-center pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden bg-slate-950">
-        {/* Dynamic Hero Background Image */}
+      {/* 1. HERO SECTION - Vibrant Architectural Backdrop */}
+      <section className="relative min-h-[92vh] flex items-center justify-center pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden bg-slate-900 dark:bg-[#070C18]">
+        {/* Architectural Image */}
         <div className="absolute inset-0 z-0">
           <img
             key={heroImageSrc}
             src={heroImageSrc}
             alt="ESHAG Architectural Project"
-            className="w-full h-full object-cover object-center filter brightness-[0.3] transition-opacity duration-700"
+            className="w-full h-full object-cover object-center filter brightness-[0.85] contrast-[1.08] dark:brightness-[0.55] transition-all duration-700"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/40 to-slate-950/90 dark:from-[#070C18]/90 dark:via-transparent dark:to-[#070C18]" />
+          {/* Light-balanced scrim overlay for crystal-clear image + text legibility */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/60 via-slate-950/25 to-slate-950/70 dark:from-[#070C18]/80 dark:via-[#070C18]/45 dark:to-[#070C18]" />
         </div>
 
         <div className="relative z-10 max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-semibold uppercase tracking-widest mb-6 backdrop-blur-md">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-950/70 border border-orange-500/40 text-orange-400 text-xs font-semibold uppercase tracking-widest mb-6 backdrop-blur-md shadow-lg">
             <HardHat className="w-3.5 h-3.5 text-orange-500" />
             GHANA&apos;S PREMIER CIVIL &amp; BUILDING CONTRACTORS
           </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]">
             {renderHeadline(heroHeadline)}
           </h1>
 
-          <p className="max-w-3xl mx-auto text-base sm:text-xl text-slate-200 mb-10 leading-relaxed font-light">
+          <p className="max-w-3xl mx-auto text-base sm:text-xl text-slate-100 mb-10 leading-relaxed font-medium drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
             {heroSubheadline}
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
               to={heroCtaUrl}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all text-sm sm:text-base"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl shadow-xl shadow-orange-500/30 hover:shadow-orange-500/50 transition-all text-sm sm:text-base"
             >
               {heroCtaText}
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               to="/cost-estimator"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-slate-900/90 hover:bg-slate-800 text-white border border-slate-700 font-bold rounded-xl backdrop-blur-md transition-all text-sm sm:text-base"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-slate-950/80 hover:bg-slate-900 text-white border border-slate-600/80 font-bold rounded-xl backdrop-blur-md shadow-xl transition-all text-sm sm:text-base"
             >
               <Calculator className="w-4 h-4 text-orange-400" />
               Cost Calculator
