@@ -1,6 +1,18 @@
 {
   "rewrites": [
     {
+      "source": "/admin/:path*",
+      "destination": "https://eshag-website.onrender.com/admin/:path*"
+    },
+    {
+      "source": "/static/:path*",
+      "destination": "https://eshag-website.onrender.com/static/:path*"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "https://eshag-website.onrender.com/api/:path*"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
